@@ -1,0 +1,21 @@
+.time-blocks-container {
+    height: 100%;
+
+    .header {
+        height: 41.5px;
+        border: 1px solid black;
+    }
+
+    .blocks {
+        display: flex;
+        flex-direction: column;
+
+        .block {
+            border: 1px solid black;
+            padding: 5px;
+
+            height: 100px;
+            width: 70px;
+        }
+    }
+}
