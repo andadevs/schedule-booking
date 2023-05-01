@@ -9,12 +9,13 @@ import {
 import { IBookModalProp } from "./type"
 import { generateRandomHexaColor, updateTimeBlockStatus } from '../../../../common/functions';
 import { timeBlocksMock } from '../../../../common/mock';
+import { bookingSetup } from '../../../../common/config';
 
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
-import { bookingSetup } from '../../../../common/config';
+import Alert from 'react-bootstrap/Alert';
 
 const BookModal = ({
   showModal,
@@ -28,6 +29,7 @@ const BookModal = ({
   const [locationIdSelected, setLocationIdSelected] = useState<string>("")
   const [selectedStartTimePosition, setSelectedStartTimePosition] = useState<string>("")
   const [selectedEndTimePosition, setSelectedEndTimePosition] = useState<string>("")
+  const [showAlertForm, setShowAlertForm] = useState<boolean>(false)
 
   useEffect(() => {
     setShow(showModal);
@@ -70,36 +72,41 @@ const BookModal = ({
   };
 
   const saveHandler = (): void => {
-    setShow(false);
-    const { slotHeigth } = bookingSetup;
-    const { slotsBooked } = locations.filter((ele) => ele.id === locationIdSelected)[0]
-    const id = `bookedSlot${slotsBooked.length === 0 ? "1" : slotsBooked.length + 1}`
-    const title = `Booked ${slotsBooked.length === 0 ? "1" : slotsBooked.length + 1}`
-    const timeBlocksTaked = (parseInt(selectedEndTimePosition) - parseInt(selectedStartTimePosition)) + 1
-    const bookedPosition = parseInt(selectedStartTimePosition)
-    let top = slotsBooked.length === 0 || bookedPosition === 1 ? "0" : `${(bookedPosition * slotHeigth) - slotHeigth}px`;
-    const bookedSlotHeight = `${timeBlocksTaked * slotHeigth}px`
-    
-    let listOfPositions: number[] = [];
-    
-    for(var i = parseInt(selectedStartTimePosition); i <= parseInt(selectedEndTimePosition); i++ ) {
-      listOfPositions.push(i)
+    if(locationIdSelected === "none" || !locationIdSelected) {
+      setShowAlertForm(true)
+    } else {
+      setShowAlertForm(false)
+      setShow(false);
+      const { slotHeigth } = bookingSetup;
+      const { slotsBooked } = locations.filter((ele) => ele.id === locationIdSelected)[0]
+      const id = `bookedSlot${slotsBooked.length === 0 ? "1" : slotsBooked.length + 1}`
+      const title = `Booked ${slotsBooked.length === 0 ? "1" : slotsBooked.length + 1}`
+      const timeBlocksTaked = (parseInt(selectedEndTimePosition) - parseInt(selectedStartTimePosition)) + 1
+      const bookedPosition = parseInt(selectedStartTimePosition)
+      let top = slotsBooked.length === 0 || bookedPosition === 1 ? "0" : `${(bookedPosition * slotHeigth) - slotHeigth}px`;
+      const bookedSlotHeight = `${timeBlocksTaked * slotHeigth}px`
+      
+      let listOfPositions: number[] = [];
+      
+      for(var i = parseInt(selectedStartTimePosition); i <= parseInt(selectedEndTimePosition); i++ ) {
+        listOfPositions.push(i)
+      }
+
+      const newBookedSlot: IBookedSlot = {
+        id,
+        title,
+        timeBlocksTaked,
+        locationId: locationIdSelected,
+        positions: listOfPositions,
+        style: {
+          top,
+          height: bookedSlotHeight,
+          backgroundColor: generateRandomHexaColor(),
+        },
+      };
+
+      addHandler(newBookedSlot);
     }
-
-    const newBookedSlot: IBookedSlot = {
-      id,
-      title,
-      timeBlocksTaked,
-      locationId: locationIdSelected,
-      positions: listOfPositions,
-      style: {
-        top,
-        height: bookedSlotHeight,
-        backgroundColor: generateRandomHexaColor(),
-      },
-    };
-
-    addHandler(newBookedSlot);
   };
 
   return (
@@ -108,6 +115,14 @@ const BookModal = ({
         <Modal.Title>Booking a Time</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <Alert variant="danger" className='validation-box' show={showAlertForm}>
+          <Alert.Heading>Upps!, Please fix the errors</Alert.Heading>
+          <p className='validation-text'><strong>*</strong><span>Select a Location</span></p>
+          <p className='validation-text'><strong>*</strong><span>Select a StartTime</span></p>
+          <p className='validation-text'><strong>*</strong><span>Select a EndTime</span></p>
+          <p className='validation-text'><strong>*</strong><span>StartTime must be less than or equal to EndTime</span></p>
+          <p className='validation-text'><strong>*</strong><span>EndTime must be less than or equal to StartTime</span></p>
+        </Alert>
         <Form>
           <Form.Group className="mb-3" controlId="locations">
             <FloatingLabel controlId="locationSelection" label="Select a Location">
