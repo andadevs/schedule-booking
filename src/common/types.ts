@@ -6,17 +6,18 @@ export interface ISlot {
   position: number;
 }
 
+export interface IBookedSlot {
+  id: string;
+  title: string;
+  timeBlocksTaked: number;
+  style: CSSProperties;
+  locationId: string
+}
 export interface ILocation {
   id: string;
   title: string;
   slots: ISlot[];
-}
-
-export interface IBookedSlot {
-  id: string;
-  title: string;
-  positions: number;
-  style: CSSProperties;
+  slotsBooked: IBookedSlot[]
 }
 
 export interface ITimeBlock {

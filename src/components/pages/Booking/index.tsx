@@ -3,7 +3,7 @@ import { useState, useEffect, CSSProperties } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 
-import { bookedSlotsMock } from './mock';
+import { locationTwoBookedSlotsMock } from './mock';
 import {locationsMock} from "../../UI/molecules/Locations/mock"
 import { ILocation, IBookedSlot } from '../../../common/types';
 
@@ -11,10 +11,11 @@ import SCBookModal from '../../UI/molecules/BookModal';
 import SCTimeBlocks from '../../UI/molecules/TimeBlocks';
 import SCLocations from '../../UI/molecules/Locations';
 import SCToolbar from '../../UI/molecules/Toolbar';
+import { setBookedSlotToLocation } from '../../../common/functions';
 
 const Booking = () => {
   const [locations, setLocations] = useState<ILocation[]>([]);
-  const [bookedSlots, setBookedSlots] = useState<IBookedSlot[]>([]);
+  const [bookedSlot, setBookedSlot] = useState<IBookedSlot>();
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -24,8 +25,15 @@ const Booking = () => {
   }, [locations]);
 
   useEffect(() => {
-    if (locations.length > 0) setBookedSlots(bookedSlotsMock);
+    if (locations.length > 0) setBookedSlot(locationTwoBookedSlotsMock);
   }, [locations]);
+
+  useEffect(() => {
+    if(bookedSlot !== undefined && locations.length > 0) {
+      const locationsWithBookedSlots = setBookedSlotToLocation(locations, bookedSlot)
+      setLocations(locationsWithBookedSlots)
+    }
+  }, [bookedSlot])
 
   const openBookModalHandler = () => setShowModal(true);
 
@@ -35,7 +43,8 @@ const Booking = () => {
 
   const addBookHandler = (newBookedSlot: IBookedSlot) => {
     setShowModal(false);
-    setBookedSlots((currentBookSlots) => [...currentBookSlots, newBookedSlot]);
+    const locationsWithBookedSlots = setBookedSlotToLocation(locations, newBookedSlot)
+    setLocations(locationsWithBookedSlots)
   };
 
   return (
@@ -43,7 +52,7 @@ const Booking = () => {
       <SCToolbar openBookModalHandler={openBookModalHandler} />
       <div className='flex-container'>
         <SCTimeBlocks />
-        <SCLocations bookedSlots={[]} />
+        <SCLocations locations={locations} />
       </div>
       <SCBookModal
         showModal={showModal}

@@ -1,5 +1,5 @@
-import { ILocation, IBookedSlot} from "../../../../common/types"
+import { ILocation, IBookedSlot } from "../../../../common/types"
 
 export interface ILocationProp {
-    bookedSlots: IBookedSlot[]
+    locations: ILocation[]
 }

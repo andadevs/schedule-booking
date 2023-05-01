@@ -118,18 +118,21 @@ const locationOneMock: ILocation = {
   id: 'locationOne',
   title: 'Location 1',
   slots: locationOneSlotMock,
+  slotsBooked: []
 };
 
 const locationTwoMock: ILocation = {
   id: 'locationTwo',
   title: 'Location 2',
   slots: locationTwoSlotMock,
+  slotsBooked: []
 };
 
 const locationThreeMock: ILocation = {
   id: 'locationThree',
   title: 'Location 3',
   slots: locationThreeSlotMock,
+  slotsBooked: []
 };
 
 export const locationsMock: ILocation[] = [{ ...locationOneMock }, { ...locationTwoMock }, { ...locationThreeMock }];
