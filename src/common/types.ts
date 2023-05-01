@@ -11,7 +11,8 @@ export interface IBookedSlot {
   title: string;
   timeBlocksTaked: number;
   style: CSSProperties;
-  locationId: string
+  locationId: string;
+  positions: number[]
 }
 export interface ILocation {
   id: string;

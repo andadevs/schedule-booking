@@ -7,12 +7,14 @@ import {
   ITimeBlock,
 } from '../../../../common/types';
 import { IBookModalProp } from "./type"
-import { generateRandomHexaColor } from '../../../../common/functions';
-import { timeStartBlocksMock, timeEndBlocksMock } from '../../../../common/mock';
+import { generateRandomHexaColor, updateTimeBlockStatus } from '../../../../common/functions';
+import { timeBlocksMock } from '../../../../common/mock';
 
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
+import { bookingSetup } from '../../../../common/config';
 
 const BookModal = ({
   showModal,
@@ -22,9 +24,8 @@ const BookModal = ({
 }: IBookModalProp) => {
   const [show, setShow] = useState<boolean>();
   const [dropLocations, setDropLocations] = useState<ILocation[]>([]);
-  const [timesStartBlock, setTimesStartBlock] = useState<ITimeBlock[]>([]);
-  const [timesEndBlock, setTimesEndBlock] = useState<ITimeBlock[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<string>("")
+  const [timesBlocks, setTimesBlocks] = useState<ITimeBlock[]>([]);
+  const [locationIdSelected, setLocationIdSelected] = useState<string>("")
   const [selectedStartTimePosition, setSelectedStartTimePosition] = useState<string>("")
   const [selectedEndTimePosition, setSelectedEndTimePosition] = useState<string>("")
 
@@ -36,14 +37,6 @@ const BookModal = ({
     if (locations.length > 0) setDropLocations(locations);
   }, [locations]);
 
-  useEffect(() => {
-    setTimesStartBlock(timeStartBlocksMock);
-  }, [timeStartBlocksMock]);
-
-  useEffect(() => {
-    setTimesEndBlock(timeEndBlocksMock);
-  }, [timeEndBlocksMock]);
-
   const closeHandler = (): void => {
     setShow(false);
     updateModalState();
@@ -51,34 +44,54 @@ const BookModal = ({
 
   const locationSelectionHandler = (evt: ChangeEvent<HTMLSelectElement>): void => {
     const { target: { value } } = evt;
-    setSelectedLocation(value)
-  }
+    if(value !== "none" && value) {
+      setLocationIdSelected(value)
+
+      if (locations.length > 0) {
+        const locationSelected = locations.filter((ele) => ele.id === value)[0]
+        const locationTimeBlockStatusUpdated = updateTimeBlockStatus(locationSelected, timeBlocksMock)
+        setTimesBlocks(locationTimeBlockStatusUpdated);
+      }
+    }
+  };
 
   const startTimeSelectionHandler = (evt: ChangeEvent<HTMLSelectElement>): void => {
     const { target: { value } } = evt;
-    setSelectedStartTimePosition(value)
-  }
+    if(value !== "none" && value) setSelectedStartTimePosition(value);
+  };
 
   const endTimeSelectionHandler = (evt: ChangeEvent<HTMLSelectElement>): void => {
     const { target: { value } } = evt;
-    setSelectedEndTimePosition(value)
-  }
+    if(value !== "none" && value && parseInt(value) >= parseInt(selectedStartTimePosition)) {
+      setSelectedEndTimePosition(value);
+    }else {
+      console.log("seleecciona algo bueno")
+    }
+  };
 
   const saveHandler = (): void => {
     setShow(false);
-    const { slotsBooked } = locations.filter((ele) => ele.id === selectedLocation)[0]
-    console.log("slotsBooked selected", slotsBooked)
+    const { slotHeigth } = bookingSetup;
+    const { slotsBooked } = locations.filter((ele) => ele.id === locationIdSelected)[0]
     const id = `bookedSlot${slotsBooked.length === 0 ? "1" : slotsBooked.length + 1}`
     const title = `Booked ${slotsBooked.length === 0 ? "1" : slotsBooked.length + 1}`
     const timeBlocksTaked = (parseInt(selectedEndTimePosition) - parseInt(selectedStartTimePosition)) + 1
     const bookedPosition = parseInt(selectedStartTimePosition)
-    let top = slotsBooked.length === 0 || bookedPosition === 1 ? "0" : `${(bookedPosition * 100) - 100}px`;
-    const bookedSlotHeight = `${timeBlocksTaked * 100}px`
+    let top = slotsBooked.length === 0 || bookedPosition === 1 ? "0" : `${(bookedPosition * slotHeigth) - slotHeigth}px`;
+    const bookedSlotHeight = `${timeBlocksTaked * slotHeigth}px`
+    
+    let listOfPositions: number[] = [];
+    
+    for(var i = parseInt(selectedStartTimePosition); i <= parseInt(selectedEndTimePosition); i++ ) {
+      listOfPositions.push(i)
+    }
+
     const newBookedSlot: IBookedSlot = {
       id,
       title,
       timeBlocksTaked,
-      locationId: selectedLocation,
+      locationId: locationIdSelected,
+      positions: listOfPositions,
       style: {
         top,
         height: bookedSlotHeight,
@@ -97,37 +110,40 @@ const BookModal = ({
       <Modal.Body>
         <Form>
           <Form.Group className="mb-3" controlId="locations">
-            <Form.Label>Select a Location</Form.Label>
-            <Form.Select aria-label="Select a Location" onChange={locationSelectionHandler}>
-              <option>List of Locations</option>
-              {dropLocations.map(({ id, title }) => (
-                <option value={id} key={id}>
-                  {title}
-                </option>
-              ))}
-            </Form.Select>
+            <FloatingLabel controlId="locationSelection" label="Select a Location">
+              <Form.Select aria-label="Select a Location" onChange={locationSelectionHandler}>
+                <option value="none">List of Locations</option>
+                {dropLocations.map(({ id, title }) => (
+                  <option value={id} key={id}>
+                    {title}
+                  </option>
+                ))}
+              </Form.Select>
+            </FloatingLabel>
           </Form.Group>
           <Form.Group className="mb-3" controlId="startTime" onChange={startTimeSelectionHandler}>
-            <Form.Label>Select a Start Time</Form.Label>
-            <Form.Select aria-label="Select a StartTime">
-              <option>List of Start Time</option>
-              {timesStartBlock.map(({ position, label, disabled }) => (
-                <option value={position} disabled={disabled} key={label}>
-                  {label}
-                </option>
-              ))}
-            </Form.Select>
+            <FloatingLabel controlId="startTimeSelection" label="Select a Start Time">
+              <Form.Select aria-label="Select a StartTime">
+                <option value="none">List of Start Time</option>
+                {timesBlocks.map(({ position, label, disabled }) => (
+                  <option value={position} disabled={disabled} key={label}>
+                    {label}
+                  </option>
+                ))}
+              </Form.Select>
+            </FloatingLabel>
           </Form.Group>
           <Form.Group className="mb-3" controlId="endTime" onChange={endTimeSelectionHandler}>
-            <Form.Label>Select a End Time</Form.Label>
-            <Form.Select aria-label="Select a EndTime">
-              <option>List of End Time</option>
-              {timesEndBlock.map(({ position, label, disabled }) => (
-                <option value={position} disabled={disabled} key={label}>
-                  {label}
-                </option>
-              ))}
-            </Form.Select>
+            <FloatingLabel controlId="endTimeSelection" label="Select an End Time">
+              <Form.Select aria-label="Select a EndTime">
+                <option value="none">List of End Time</option>
+                {timesBlocks.map(({ position, label, disabled }) => (
+                  <option value={position} disabled={disabled} key={label}>
+                    {label}
+                  </option>
+                ))}
+              </Form.Select>
+            </FloatingLabel>
           </Form.Group>
         </Form>
       </Modal.Body>
