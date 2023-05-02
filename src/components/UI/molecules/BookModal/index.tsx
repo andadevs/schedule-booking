@@ -91,7 +91,7 @@ const BookModal = ({
         const title = `Booked ${slotsBooked.length === 0 ? "1" : slotsBooked.length + 1}`
         const timeBlocksTaked = (parseInt(selectedEndTimePosition) - parseInt(selectedStartTimePosition)) + 1
         const bookedPosition = parseInt(selectedStartTimePosition)
-        let top = slotsBooked.length === 0 || bookedPosition === 1 ? "0" : `${(bookedPosition * slotHeigth) - slotHeigth}px`;
+        let top = bookedPosition === 1 ? "0" : `${(bookedPosition * slotHeigth) - slotHeigth}px`;
         const bookedSlotHeight = `${timeBlocksTaked * slotHeigth}px`
 
         let listOfPositions: number[] = [];
