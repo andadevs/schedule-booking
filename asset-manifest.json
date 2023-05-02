@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/schedule-booking/static/css/main.e47ebd51.css",
-    "main.js": "/schedule-booking/static/js/main.3dc37639.js",
+    "main.js": "/schedule-booking/static/js/main.46595b6d.js",
     "static/js/787.88e0b02c.chunk.js": "/schedule-booking/static/js/787.88e0b02c.chunk.js",
     "index.html": "/schedule-booking/index.html",
     "main.e47ebd51.css.map": "/schedule-booking/static/css/main.e47ebd51.css.map",
-    "main.3dc37639.js.map": "/schedule-booking/static/js/main.3dc37639.js.map",
+    "main.46595b6d.js.map": "/schedule-booking/static/js/main.46595b6d.js.map",
     "787.88e0b02c.chunk.js.map": "/schedule-booking/static/js/787.88e0b02c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e47ebd51.css",
-    "static/js/main.3dc37639.js"
+    "static/js/main.46595b6d.js"
   ]
 }
