@@ -11,6 +11,8 @@ import { generateRandomHexaColor, updateTimeBlockStatus } from '../../../../comm
 import { timeBlocksMock } from '../../../../common/mock';
 import { bookingSetup } from '../../../../common/config';
 
+import "./style.scss"
+
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
@@ -98,6 +100,8 @@ const BookModal = ({
           listOfPositions.push(i)
         }
 
+        const colorHex = generateRandomHexaColor();
+
         const newBookedSlot: IBookedSlot = {
           id,
           title,
@@ -107,7 +111,8 @@ const BookModal = ({
           style: {
             top,
             height: bookedSlotHeight,
-            backgroundColor: generateRandomHexaColor(),
+            backgroundColor: colorHex,
+            boxShadow: `0px 0px 6px 1px ${colorHex}`
           },
         };
 
@@ -122,7 +127,7 @@ const BookModal = ({
   };
 
   return (
-    <Modal show={show} onHide={closeHandler} backdrop={false}>
+    <Modal show={show} onHide={closeHandler} backdrop={false} className='booking-modal'>
       <Modal.Header closeButton>
         <Modal.Title>Booking a Time</Modal.Title>
       </Modal.Header>
@@ -185,11 +190,11 @@ const BookModal = ({
               </Form.Control.Feedback>
             </FloatingLabel>
           </Form.Group>
-          <Form.Group className="mb-3" controlId="endTime">
-            <Button variant="secondary" onClick={closeHandler}>
+          <Form.Group className="mb-3 modal-actions" controlId="endTime">
+            <Button variant="secondary" onClick={closeHandler} className='btn-cancel'>
               Close
             </Button>
-            <Button type='submit' variant="primary">
+            <Button type='submit' variant="primary" className='btn-add'>
               Add
             </Button>
           </Form.Group>

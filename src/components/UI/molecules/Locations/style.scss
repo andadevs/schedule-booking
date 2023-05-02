@@ -8,16 +8,19 @@
         overflow: hidden;
 
         .header {
-            border: 1px solid black;
+            border: 1px dashed rgba(220,119,61, 0.3);
             height: 41.5px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 0 3px 10px rgba(220,119,61, 0.3);
+            background: #fff;
 
             .title {
                 margin: 0;
                 padding: 0;
                 font-size: 18px;
+                color: rgb(12, 29, 65);
             }
         }
 
@@ -25,15 +28,18 @@
             position: relative;
 
             .slot {
-                border: 1px solid black;
                 height: 100px;
+
+                box-shadow: 0 0px 3px 0px rgba(12, 29, 65, 0.1);
+                background: #fff;
                 display: flex;
-                align-items: center;
                 justify-content: center;
+                align-items: center;
+                color: rgb(122,125,137);
+                border: 1px solid rgb(245, 245, 251);
             }
 
             .slot-booked {
-                border: 1px solid blue;
                 position: absolute;
                 width: 100%;
                 display: flex;

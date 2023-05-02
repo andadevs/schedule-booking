@@ -12,6 +12,7 @@ import SCTimeBlocks from '../../UI/molecules/TimeBlocks';
 import SCLocations from '../../UI/molecules/Locations';
 import SCToolbar from '../../UI/molecules/Toolbar';
 import { setBookedSlotToLocation } from '../../../common/functions';
+import NavbarToolbar from '../../UI/organisms/NavbarToolbar';
 
 const Booking = () => {
   const [locations, setLocations] = useState<ILocation[]>([]);
@@ -49,6 +50,7 @@ const Booking = () => {
 
   return (
     <div className='booking'>
+      <NavbarToolbar />
       <SCToolbar openBookModalHandler={openBookModalHandler} />
       <div className='flex-container'>
         <SCTimeBlocks />

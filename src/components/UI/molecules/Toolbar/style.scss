@@ -1,0 +1,21 @@
+.toolbar-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+
+    .btn {
+        position: absolute;
+        top: -49px;
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        --bs-btn-bg: rgb(103,136,255);
+    }
+}

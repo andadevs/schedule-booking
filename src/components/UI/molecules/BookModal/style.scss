@@ -1,0 +1,22 @@
+.booking-modal {
+    background-color: rgba(245, 245, 251, 0.7);
+
+    .modal-content {
+        border: none;
+        box-shadow: 0px 0px 8px -3px rgb(12, 29, 65);
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+
+        .btn-add {
+            background: rgb(103,136,255)
+        }
+
+        .btn-cancel {
+            background-color: rgb(12, 29, 65);
+        }
+    }
+}

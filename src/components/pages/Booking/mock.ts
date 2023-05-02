@@ -1,6 +1,8 @@
 import { generateRandomHexaColor } from '../../../common/functions';
 import { IBookedSlot } from '../../../common/types';
 
+const colorHex = generateRandomHexaColor();
+
 export const locationTwoBookedSlotsMock: IBookedSlot = {
   id: 'bookedSlot1',
   locationId: "locationOne",
@@ -10,6 +12,7 @@ export const locationTwoBookedSlotsMock: IBookedSlot = {
   style: {
     top: '0',
     height: '100px',
-    backgroundColor: generateRandomHexaColor(),
+    backgroundColor: colorHex,
+    boxShadow: `0px 0px 6px 1px ${colorHex}`
   },
 }
